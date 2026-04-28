@@ -1,0 +1,11 @@
+# Raw data (do not upload)
+data/raw_pdfs/
+data/raw_landing_pages/
+
+# Optional: cache / temp
+data/tmp/
+data/cache/
+
+# Execution artifacts (可选)
+results/runs/
+results/logs/
