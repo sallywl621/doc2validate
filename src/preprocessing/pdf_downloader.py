@@ -54,19 +54,12 @@ def get_pdf_filename(row: pd.Series) -> str:
 
     return "unknown_paper.pdf"
 
-
 def download_pdf(
     pdf_url: str,
     output_path: Path,
-    timeout: int = 90,
-    overwrite: bool = False,
-) -> Tuple[str, str, int]:
-    """
-    Download one PDF.
-
-    Returns:
-        download_status, download_error, file_size_bytes
-    """
+    timeout: int,
+    overwrite: bool,
+) -> tuple[str, str, int]:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     if output_path.exists() and output_path.stat().st_size > 0 and not overwrite:
@@ -76,21 +69,14 @@ def download_pdf(
         return "no_pdf_url", "Missing pdf_url", 0
 
     try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 Doc2Validate PDF downloader"
-        }
-
         response = requests.get(
             pdf_url,
-            headers=headers,
+            headers={"User-Agent": "Mozilla/5.0 Doc2Validate PDF downloader"},
             timeout=timeout,
             stream=True,
             allow_redirects=True,
         )
-
         response.raise_for_status()
-
-        content_type = response.headers.get("content-type", "").lower()
 
         with output_path.open("wb") as file:
             for chunk in response.iter_content(chunk_size=8192):
@@ -99,21 +85,39 @@ def download_pdf(
 
         file_size = output_path.stat().st_size if output_path.exists() else 0
 
+        # ❌ 空文件 → 删除
         if file_size == 0:
-            return "failed", "Downloaded file is empty", 0
+            if output_path.exists():
+                output_path.unlink()
+            return "failed", "empty_file", 0
 
-        if "pdf" not in content_type and not output_path.name.lower().endswith(".pdf"):
-            return "success_non_pdf_content_type", f"content-type={content_type}", file_size
+        # ❌ 非PDF（HTML错误页等）
+        content_type = response.headers.get("content-type", "").lower()
+        if "pdf" not in content_type:
+            logging.warning(
+                "[INVALID] not a PDF content-type=%s url=%s",
+                content_type,
+                pdf_url,
+            )
+            if output_path.exists():
+                output_path.unlink()
+            return "failed", f"invalid_content_type:{content_type}", 0
 
         return "success", "", file_size
 
     except requests.exceptions.Timeout:
+        if output_path.exists():
+            output_path.unlink()
         return "failed", "timeout", 0
 
     except requests.exceptions.RequestException as exc:
+        if output_path.exists():
+            output_path.unlink()
         return "failed", f"request_error: {exc}", 0
 
     except Exception as exc:
+        if output_path.exists():
+            output_path.unlink()
         return "failed", f"unexpected_error: {exc}", 0
 
 

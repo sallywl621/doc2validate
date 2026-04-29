@@ -16,3 +16,4 @@ python src/preprocessing/pdf_downloader.py \
   --input-manifest data/manifests/test.csv \
   --output-manifest data/manifests/test_pdf_manifest.csv \
   --pdf-dir data/raw_pdfs
+

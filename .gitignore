@@ -9,3 +9,7 @@ data/cache/
 # Execution artifacts 
 results/runs/
 results/logs/
+
+
+# Local private configs
+src/utils/local_config.py

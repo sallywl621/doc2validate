@@ -1,19 +1,3 @@
-"""
-Parse PDF files into structured JSON-like dictionaries.
-
-Main responsibilities:
-1. Send PDF files to a local GROBID service.
-2. Parse GROBID TEI XML into title, authors, abstract, sections, and figures.
-3. Fetch references from CrossRef using DOI.
-4. Return a structured dictionary with metadata and text chunks.
-
-Expected GROBID service:
-    http://localhost:8070
-
-Main public function:
-    parse_pdf_to_json(file_path)
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -35,7 +19,6 @@ class SimpleTextSplitter:
         self.chunk_overlap = chunk_overlap
 
     def split_text(self, text: str) -> List[str]:
-        """Split text into overlapping chunks."""
         sentences = re.split(r"(?<=[。！？.!?])\s+", text)
 
         chunks: List[str] = []
@@ -62,7 +45,6 @@ class SimpleTextSplitter:
 
 
 def setup_logging() -> None:
-    """Configure basic logging."""
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(message)s",
@@ -84,7 +66,7 @@ def grobid_parse_pdf_to_dict(
     grobid_url: str = "http://localhost:8070",
     timeout: int = 90,
 ) -> Optional[Dict[str, Any]]:
-    """Send a PDF to GROBID and parse the returned TEI XML."""
+    """Send one PDF to GROBID and parse the returned TEI XML."""
     file_path = Path(file_path)
 
     try:
@@ -97,7 +79,11 @@ def grobid_parse_pdf_to_dict(
             )
 
         if response.status_code != 200:
-            logging.warning("GROBID request failed: status=%s", response.status_code)
+            logging.warning(
+                "GROBID request failed for %s: status=%s",
+                file_path,
+                response.status_code,
+            )
             return None
 
         return parse_grobid_xml_to_dict(response.text)
@@ -108,7 +94,7 @@ def grobid_parse_pdf_to_dict(
 
 
 def parse_grobid_xml_to_dict(xml_content: str) -> Optional[Dict[str, Any]]:
-    """Parse GROBID TEI XML into a plain dictionary."""
+    """Parse GROBID TEI XML into a normalized dictionary."""
     try:
         root = ET.fromstring(xml_content)
         ns = {"tei": "http://www.tei-c.org/ns/1.0"}
@@ -120,7 +106,6 @@ def parse_grobid_xml_to_dict(xml_content: str) -> Optional[Dict[str, Any]]:
             "doi": "",
             "sections": [],
             "figures": [],
-            "references": [],
         }
 
         title_elem = root.find(".//tei:titleStmt/tei:title", ns)
@@ -157,7 +142,6 @@ def parse_grobid_xml_to_dict(xml_content: str) -> Optional[Dict[str, Any]]:
 
 
 def extract_author_name(author_elem: ET.Element, ns: Dict[str, str]) -> str:
-    """Extract author name from a TEI author element."""
     pers_name = author_elem.find("tei:persName", ns)
     if pers_name is None:
         return ""
@@ -172,7 +156,6 @@ def extract_author_name(author_elem: ET.Element, ns: Dict[str, str]) -> str:
 
 
 def extract_element_text(element: ET.Element) -> str:
-    """Extract text from an XML element and its direct children."""
     text_parts: List[str] = []
 
     if element.text and element.text.strip():
@@ -188,7 +171,6 @@ def extract_element_text(element: ET.Element) -> str:
 
 
 def extract_sections(root: ET.Element, ns: Dict[str, str]) -> List[Dict[str, str]]:
-    """Extract section headings and text from the TEI body."""
     sections: List[Dict[str, str]] = []
     body_elem = root.find(".//tei:text/tei:body", ns)
 
@@ -210,6 +192,7 @@ def extract_sections(root: ET.Element, ns: Dict[str, str]) -> List[Dict[str, str
                 section_text_parts.append(paragraph_text)
 
         section_text = "\n\n".join(section_text_parts).strip()
+
         if section_text:
             sections.append(
                 {
@@ -222,7 +205,6 @@ def extract_sections(root: ET.Element, ns: Dict[str, str]) -> List[Dict[str, str
 
 
 def extract_figures(root: ET.Element, ns: Dict[str, str]) -> List[Dict[str, str]]:
-    """Extract figure and table captions from TEI XML."""
     figures: List[Dict[str, str]] = []
 
     for figure_elem in root.findall(".//tei:figure", ns):
@@ -231,8 +213,11 @@ def extract_figures(root: ET.Element, ns: Dict[str, str]) -> List[Dict[str, str]
 
         figure_label = label_elem.text.strip() if label_elem is not None and label_elem.text else ""
         figure_caption = (
-            caption_elem.text.strip() if caption_elem is not None and caption_elem.text else ""
+            caption_elem.text.strip()
+            if caption_elem is not None and caption_elem.text
+            else ""
         )
+
         figure_type = "table" if figure_elem.find(".//tei:table", ns) is not None else "figure"
 
         figures.append(
@@ -246,8 +231,11 @@ def extract_figures(root: ET.Element, ns: Dict[str, str]) -> List[Dict[str, str]
     return figures
 
 
-def get_references_from_crossref(doi: str, timeout: int = 30) -> List[str]:
-    """Fetch references from CrossRef using a DOI."""
+def get_references_from_crossref(
+    doi: str,
+    timeout: int = 30,
+) -> List[str]:
+    """Fetch reference strings from CrossRef."""
     if not doi:
         return []
 
@@ -256,8 +244,13 @@ def get_references_from_crossref(doi: str, timeout: int = 30) -> List[str]:
 
     try:
         response = requests.get(url, timeout=timeout)
+
         if response.status_code != 200:
-            logging.warning("CrossRef request failed for DOI %s: %s", doi, response.status_code)
+            logging.warning(
+                "CrossRef request failed for DOI %s: status=%s",
+                doi,
+                response.status_code,
+            )
             return []
 
         data = response.json()
@@ -267,7 +260,7 @@ def get_references_from_crossref(doi: str, timeout: int = 30) -> List[str]:
 
         if reference_count and len(reference_list) != reference_count:
             logging.info(
-                "CrossRef reference count mismatch for %s: reported=%s parsed=%s",
+                "CrossRef reference count mismatch for DOI %s: reported=%s parsed=%s",
                 doi,
                 reference_count,
                 len(reference_list),
@@ -287,7 +280,7 @@ def get_references_from_crossref(doi: str, timeout: int = 30) -> List[str]:
 
 
 def extract_reference_text(ref_data: Dict[str, Any], index: int) -> str:
-    """Extract a human-readable reference string from CrossRef reference data."""
+    """Extract one readable reference string from CrossRef reference metadata."""
     if ref_data.get("unstructured"):
         return f"{index}. {ref_data['unstructured'].strip()}"
 
@@ -330,13 +323,18 @@ def parse_pdf_to_json(
     include_crossref_references: bool = True,
 ) -> Optional[Dict[str, Any]]:
     """
-    Parse a PDF into a structured JSON-like dictionary.
+    Parse one PDF into a structured JSON-like dictionary.
 
-    The returned dictionary contains:
-        metadata
-        chunks
-
-    The REFERENCES chunk is appended at the end when possible.
+    Output format:
+        {
+            "metadata": {...},
+            "chunks": [
+                {"sectitle": "Title", "text": "..."},
+                {"sectitle": "Abstract", "text": "..."},
+                ...
+                {"sectitle": "REFERENCES", "text": "..."}
+            ]
+        }
     """
     file_path = Path(file_path)
 
@@ -455,6 +453,7 @@ def main() -> None:
         raise RuntimeError(f"Failed to parse PDF: {args.pdf}")
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
+
     with args.output.open("w", encoding="utf-8") as file:
         json.dump(result, file, indent=2, ensure_ascii=False)
 
