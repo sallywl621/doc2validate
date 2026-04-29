@@ -6,6 +6,6 @@ data/raw_landing_pages/
 data/tmp/
 data/cache/
 
-# Execution artifacts (可选)
+# Execution artifacts 
 results/runs/
 results/logs/
