@@ -21,23 +21,7 @@ mkdir -p "data/structured_docs"
 echo "Run name: ${RUN_NAME}"
 echo "Run directory: ${RUN_DIR}"
 
-# Step 1: Build article manifest
-python src/preprocessing/journal_manifest_builder.py \
-  --issn 2052-4463 \
-  --output-manifest "${MANIFEST_DIR}/articles_manifest.csv" \
-  --max-articles 10 \
-  --max-fetched 50 \
-  --filter-mode nature \
-  --log-path "${LOG_DIR}/manifest_builder.log"
 
-# Step 2: Download PDFs
-python src/preprocessing/pdf_downloader.py \
-  --input-manifest "${MANIFEST_DIR}/articles_manifest.csv" \
-  --output-manifest "${MANIFEST_DIR}/pdf_manifest.csv" \
-  --pdf-dir data/raw_pdfs \
-  --log-path "${LOG_DIR}/pdf_downloader.log"
-
-# Step 3: Preprocess PDFs
 python src/preprocessing/preprocess.py \
   --manifest "${MANIFEST_DIR}/pdf_manifest.csv" \
   --structured-output-dir data/structured_docs \
@@ -46,7 +30,5 @@ python src/preprocessing/preprocess.py \
 
 echo "Corpus builder pipeline finished."
 echo "Outputs:"
-echo "  ${MANIFEST_DIR}/articles_manifest.csv"
-echo "  ${MANIFEST_DIR}/pdf_manifest.csv"
 echo "  ${MANIFEST_DIR}/preprocess_status.csv"
 echo "  ${LOG_DIR}/"

@@ -6,7 +6,12 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from src.utils.config import ensure_run_dirs, get_all_article_ids, get_article_structure
+#from src.utils.config import ensure_run_dirs, get_all_article_ids, get_article_structure
+from src.utils.config import (
+    ensure_run_dirs,
+    get_run_article_ids,
+    get_article_structure,
+)
 from src.utils.io import load_json, save_json, write_manifest
 from src.utils.logging import setup_logging
 from src.validation.code_repository_validator import CodeRepositoryValidator
@@ -29,7 +34,8 @@ def main() -> None:
         ("dataset", DatasetURLValidator(github_token), "dataset_result_path", "dataset_url_validation.json"),
         ("code_repository", CodeRepositoryValidator(github_token), "code_repository_result_path", "code_repository_validation.json"),
     ]
-    article_ids = get_all_article_ids()
+    #article_ids = get_all_article_ids()
+    article_ids = get_run_article_ids(args.run_name)
     if args.max_articles is not None:
         article_ids = article_ids[: args.max_articles]
     rows = []

@@ -9,7 +9,12 @@ from typing import Type
 from src.extraction.base_extractor import BaseExtractor
 from src.extraction.code_repository_extractor import CodeRepositoryExtractor
 from src.extraction.dataset_extractor import DatasetExtractor
-from src.utils.config import ensure_run_dirs, get_all_article_ids, get_article_structure
+#from src.utils.config import ensure_run_dirs, get_all_article_ids, get_article_structure
+from src.utils.config import (
+    ensure_run_dirs,
+    get_run_article_ids,
+    get_article_structure,
+)
 from src.utils.io import save_json, write_manifest
 from src.utils.logging import setup_logging
 
@@ -23,7 +28,8 @@ def run_extractor(extractor_name: str, run_name: str, manifest_path: Path | None
     dirs = ensure_run_dirs(run_name)
     setup_logging(log_path or dirs["logs_dir"] / f"{extractor_name}_extraction.log")
     extractor = EXTRACTORS[extractor_name]()
-    article_ids = get_all_article_ids()
+    #article_ids = get_all_article_ids()
+    article_ids = get_run_article_ids(run_name)
     if max_articles is not None:
         article_ids = article_ids[:max_articles]
     rows = []

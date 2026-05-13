@@ -6,14 +6,23 @@ from typing import Any, Dict, Optional
 
 import requests
 
-from .config import LLM_CONFIG
+from src.utils.config import LLM_CONFIG
 
 
 class LLMClient:
-    """OpenAI-compatible client for vLLM serving."""
+    """
+    OpenAI-compatible vLLM client.
+
+    Expected endpoint:
+        <api_base_url>/chat/completions
+
+    Example:
+        http://host:port/v1/chat/completions
+    """
 
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         cfg = config or LLM_CONFIG
+
         self.model_name = cfg["model_name"]
         self.api_base_url = cfg["api_base_url"].rstrip("/")
         self.api_key = cfg.get("api_key", "EMPTY")
@@ -21,9 +30,14 @@ class LLMClient:
         self.max_tokens = cfg.get("max_tokens", 4000)
         self.timeout = cfg.get("timeout", 60)
         self.max_retries = cfg.get("max_retries", 3)
+
         self.session = requests.Session()
 
-    def generate(self, system_prompt: str, user_prompt: str) -> "LLMResponse":
+        print("[LLMClient] initialized")
+        print(f"[LLMClient] model: {self.model_name}")
+        print(f"[LLMClient] endpoint: {self.api_base_url}")
+
+    def generate(self, system_prompt: str, user_prompt: str) -> Any:
         payload = {
             "model": self.model_name,
             "messages": [
@@ -33,11 +47,14 @@ class LLMClient:
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
         }
+
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
+
         last_error = None
+
         for attempt in range(1, self.max_retries + 1):
             try:
                 resp = self.session.post(
@@ -46,29 +63,118 @@ class LLMClient:
                     headers=headers,
                     timeout=self.timeout,
                 )
+
                 if resp.status_code == 200:
                     data = resp.json()
-                    return LLMResponse(data["choices"][0]["message"]["content"])
-                last_error = f"HTTP {resp.status_code}: {resp.text[:500]}"
+                    content = data["choices"][0]["message"]["content"]
+                    return _LLMResponse(content)
+
+                last_error = f"HTTP {resp.status_code}: {resp.text}"
+
             except Exception as exc:  # noqa: BLE001
-                last_error = repr(exc)
-        return LLMResponse(json.dumps({"error": "llm_call_failed", "message": last_error}, ensure_ascii=False))
+                last_error = f"{exc.__class__.__name__}: {exc}"
+
+            print(f"[LLMClient] attempt {attempt}/{self.max_retries} failed: {last_error}")
+
+        return _LLMResponse(
+            json.dumps(
+                {
+                    "error": "llm_call_failed",
+                    "message": last_error,
+                },
+                ensure_ascii=False,
+            )
+        )
 
     def parse_json_response(self, response: Any) -> Dict[str, Any]:
-        content = getattr(response, "content", str(response)).strip()
+        content = getattr(response, "content", "")
+        content = content.strip()
+
+        if not content:
+            return {
+                "error": "empty_response",
+                "raw": content,
+            }
+
+        content = self._strip_markdown_fence(content)
+
         try:
-            fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", content, re.DOTALL)
-            if fenced:
-                return json.loads(fenced.group(1))
-            obj = re.search(r"\{.*\}", content, re.DOTALL)
-            if obj:
-                return json.loads(obj.group())
             return json.loads(content)
+        except Exception:
+            pass
+
+        candidate = self._extract_first_json_object(content)
+
+        if candidate is None:
+            return {
+                "error": "json_parse_failed",
+                "message": "No JSON object found in response",
+                "raw": content,
+            }
+
+        try:
+            return json.loads(candidate)
         except Exception as exc:  # noqa: BLE001
-            return {"error": "json_parse_failed", "message": str(exc), "raw": content}
+            return {
+                "error": "json_parse_failed",
+                "message": str(exc),
+                "raw": candidate,
+            }
+
+    def _strip_markdown_fence(self, text: str) -> str:
+        text = text.strip()
+
+        if text.startswith("```"):
+            text = re.sub(r"^```(?:json)?\s*", "", text, flags=re.IGNORECASE)
+            text = re.sub(r"\s*```$", "", text)
+
+        return text.strip()
+
+    def _extract_first_json_object(self, text: str) -> Optional[str]:
+        """
+        Extract the first balanced JSON object from a string.
+
+        This is safer than regex r'{.*}', because it respects string quotes
+        and nested braces.
+        """
+        start = text.find("{")
+        if start == -1:
+            return None
+
+        depth = 0
+        in_string = False
+        escape = False
+
+        for idx in range(start, len(text)):
+            ch = text[idx]
+
+            if escape:
+                escape = False
+                continue
+
+            if ch == "\\":
+                escape = True
+                continue
+
+            if ch == '"':
+                in_string = not in_string
+                continue
+
+            if in_string:
+                continue
+
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+
+                if depth == 0:
+                    return text[start : idx + 1]
+
+        return None
 
 
-class LLMResponse:
+class _LLMResponse:
     def __init__(self, content: str):
         self.content = content
 
@@ -78,6 +184,8 @@ _llm_client_singleton: Optional[LLMClient] = None
 
 def get_llm_client(config: Optional[Dict[str, Any]] = None) -> LLMClient:
     global _llm_client_singleton
+
     if _llm_client_singleton is None:
         _llm_client_singleton = LLMClient(config)
+
     return _llm_client_singleton
