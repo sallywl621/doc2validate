@@ -31,11 +31,6 @@ class ArtifactDownloader(BaseDownloader):
     The goal is NOT software reproduction.
     The goal is obtaining dataset artifacts usable later by
     generated validation code.
-
-    GitHub handling:
-    - Try GitHub branch archive zip first.
-    - If archive download/extraction fails, fall back to git clone.
-    - In both cases, scan only validation-relevant data files.
     """
 
     ZENODO_API = "https://zenodo.org/api/records"
@@ -177,11 +172,13 @@ class ArtifactDownloader(BaseDownloader):
                 owner=owner,
                 repo=repo,
                 branch=branch,
+                repo_url=repo_url,
                 archive_dir=archive_dir,
                 extract_dir=extract_dir,
             )
 
             entry["archive_attempts"] = download_result.get("attempts", [])
+            entry["repo_precheck"] = download_result.get("repo_precheck")
 
             if download_result.get("status") == "downloaded":
                 entry["download_mode"] = "github_archive_zip"
@@ -189,6 +186,16 @@ class ArtifactDownloader(BaseDownloader):
                 entry["archive_path"] = download_result.get("archive_path")
                 entry["bytes"] = download_result.get("bytes")
                 repo_root = self._find_extracted_repo_root(extract_dir, repo)
+
+            elif download_result.get("reason") == "repo_too_large_precheck":
+                entry["status"] = "skipped"
+                entry["reason"] = "repo_too_large_precheck"
+                entry["bytes"] = download_result.get("bytes")
+                entry["size_mb"] = download_result.get("size_mb")
+                entry["max_repo_size_mb"] = download_result.get(
+                    "max_repo_size_mb"
+                )
+                return entry
 
             else:
                 entry["archive_fallback"] = "git_clone"
@@ -235,9 +242,24 @@ class ArtifactDownloader(BaseDownloader):
         entry["artifact_files"] = artifact_files
         entry["artifact_count"] = len(artifact_files)
 
-        if artifact_files:
+        downloaded_files = [
+            f for f in artifact_files
+            if f.get("status", "downloaded") == "downloaded"
+        ]
+        oversized_files = [
+            f for f in artifact_files
+            if f.get("reason") == "file_too_large"
+        ]
+
+        entry["downloadable_artifact_count"] = len(downloaded_files)
+        entry["oversized_artifact_count"] = len(oversized_files)
+
+        if downloaded_files:
             entry["status"] = "downloaded"
             entry["reason"] = "github_repo_contains_data_artifacts"
+        elif oversized_files:
+            entry["status"] = "skipped"
+            entry["reason"] = "artifacts_exist_but_exceed_file_size_limit"
         else:
             entry["status"] = "skipped"
             entry["reason"] = "no_data_artifacts_found_in_github_repo"
@@ -249,10 +271,25 @@ class ArtifactDownloader(BaseDownloader):
         owner: str,
         repo: str,
         branch: str | None,
+        repo_url: str,
         archive_dir: Path,
         extract_dir: Path,
     ) -> Dict[str, Any]:
         attempts: List[Dict[str, Any]] = []
+
+        repo_precheck = self.github_repo_precheck(repo_url)
+
+        if repo_precheck.get("status") == "too_large":
+            return {
+                "status": "skipped",
+                "reason": "repo_too_large_precheck",
+                "repo_url": repo_url,
+                "bytes": repo_precheck.get("bytes"),
+                "size_mb": repo_precheck.get("size_mb"),
+                "max_repo_size_mb": self.max_repo_size_mb,
+                "repo_precheck": repo_precheck,
+                "attempts": attempts,
+            }
 
         for candidate_branch, archive_url in github_archive_urls(owner, repo, branch):
             archive_path = archive_dir / f"{candidate_branch}.zip"
@@ -261,6 +298,7 @@ class ArtifactDownloader(BaseDownloader):
                 "branch": candidate_branch,
                 "archive_url": archive_url,
                 "archive_path": str(archive_path),
+                "repo_precheck": repo_precheck,
             }
 
             result = self.safe_download(archive_url, archive_path)
@@ -279,12 +317,33 @@ class ArtifactDownloader(BaseDownloader):
                 with zipfile.ZipFile(archive_path, "r") as zf:
                     zf.extractall(extract_dir)
 
+                size_bytes = self.dir_size_bytes(extract_dir)
+                max_bytes = self.max_repo_size_mb * 1024 * 1024
+
+                if size_bytes > max_bytes:
+                    shutil.rmtree(extract_dir, ignore_errors=True)
+
+                    return {
+                        "status": "skipped",
+                        "reason": "repo_too_large",
+                        "repo_url": repo_url,
+                        "branch": candidate_branch,
+                        "archive_url": archive_url,
+                        "archive_path": str(archive_path),
+                        "bytes": size_bytes,
+                        "size_mb": size_bytes / 1024 / 1024,
+                        "max_repo_size_mb": self.max_repo_size_mb,
+                        "repo_precheck": repo_precheck,
+                        "attempts": attempts,
+                    }
+
                 return {
                     "status": "downloaded",
                     "branch": candidate_branch,
                     "archive_url": archive_url,
                     "archive_path": str(archive_path),
                     "bytes": result.get("bytes"),
+                    "repo_precheck": repo_precheck,
                     "attempts": attempts,
                 }
 
@@ -300,6 +359,7 @@ class ArtifactDownloader(BaseDownloader):
         return {
             "status": "failed",
             "reason": "all_github_archive_attempts_failed",
+            "repo_precheck": repo_precheck,
             "attempts": attempts,
         }
 
@@ -350,17 +410,25 @@ class ArtifactDownloader(BaseDownloader):
             except OSError:
                 continue
 
-            if size > self.max_file_size_mb * 1024 * 1024:
-                continue
+            file_record = {
+                "path": str(path),
+                "relative_path": str(rel_path),
+                "bytes": size,
+                "file_type": path.suffix.lower(),
+            }
 
-            artifacts.append(
-                {
-                    "path": str(path),
-                    "relative_path": str(rel_path),
-                    "bytes": size,
-                    "file_type": path.suffix.lower(),
-                }
-            )
+            if size > self.max_file_size_mb * 1024 * 1024:
+                file_record.update(
+                    {
+                        "status": "skipped",
+                        "reason": "file_too_large",
+                        "max_file_size_mb": self.max_file_size_mb,
+                    }
+                )
+            else:
+                file_record["status"] = "downloaded"
+
+            artifacts.append(file_record)
 
         return artifacts
 

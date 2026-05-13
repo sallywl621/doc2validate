@@ -87,7 +87,7 @@ def main() -> None:
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
 
-    parser.add_argument("--timeout", type=int, default=60)
+    parser.add_argument("--timeout", type=int, default=5)
     parser.add_argument("--max-file-size-mb", type=int, default=500)
     parser.add_argument("--max-repo-size-mb", type=int, default=1000)
 
