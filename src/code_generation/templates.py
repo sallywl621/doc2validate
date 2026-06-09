@@ -78,7 +78,6 @@ def _candidate_names(rel_path: str | None, file_pattern: str | None) -> List[str
             names.append(str(p))
             names.append(p.name)
 
-    # Deduplicate while preserving order.
     seen = set()
     out = []
     for name in names:
@@ -87,30 +86,175 @@ def _candidate_names(rel_path: str | None, file_pattern: str | None) -> List[str
         if name not in seen:
             seen.add(name)
             out.append(name)
+
     return out
 
 
-def _find_file(data_roots: List[str], rel_path: str | None, file_pattern: str | None, fmt: str) -> Tuple[Optional[Path], str]:
+def _looks_like_pointer_file(path: Path) -> bool:
+    try:
+        if path.stat().st_size > 2048:
+            return False
+
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            text = f.read(2048).strip()
+
+        if not text:
+            return True
+
+        pointer_markers = [
+            ".git/annex/objects/",
+            "../.git/annex",
+            "version https://git-lfs.github.com/spec/v1",
+            "oid sha256:",
+        ]
+
+        return any(marker in text for marker in pointer_markers)
+
+    except Exception:
+        return False
+
+
+def _valid_file(path: Path) -> bool:
+    try:
+        return (
+            path.exists()
+            and path.is_file()
+            and not path.is_symlink()
+            and path.stat().st_size > 0
+            and not _looks_like_pointer_file(path)
+        )
+    except Exception:
+        return False
+
+
+def _rank_path(path: Path) -> tuple:
+    path_str = str(path)
+
+    return (
+        0 if "/extracted/" in path_str else 1,
+        1 if "/git_clone/" in path_str else 0,
+        len(path.parts),
+        path_str,
+    )
+
+
+def _read_columns(path: Path, fmt: str) -> List[str]:
+    try:
+        fmt = (fmt or "").lower().strip(".")
+
+        if fmt == "csv":
+            return [str(c) for c in pd.read_csv(path, nrows=0).columns]
+
+        if fmt == "tsv":
+            return [str(c) for c in pd.read_csv(path, sep="\t", nrows=0).columns]
+
+        if fmt in {"xlsx", "xls"}:
+            return [str(c) for c in pd.read_excel(path, nrows=0).columns]
+
+        if fmt == "parquet":
+            return [str(c) for c in pd.read_parquet(path).columns]
+
+        if fmt in {"json", "jsonl"}:
+            df = pd.read_json(path, lines=(fmt == "jsonl"))
+            return [str(c) for c in df.columns]
+
+    except Exception:
+        return []
+
+    return []
+
+
+def _column_overlap_score(
+    path: Path,
+    fmt: str,
+    expected_columns: List[str] | None,
+) -> int:
+    if not expected_columns:
+        return 0
+
+    expected = {
+        str(c).strip().lower()
+        for c in expected_columns
+        if str(c).strip()
+    }
+
+    if not expected:
+        return 0
+
+    observed = {
+        c.strip().lower()
+        for c in _read_columns(path, fmt)
+        if c.strip()
+    }
+
+    return len(expected & observed)
+
+
+def _rank_candidates(
+    paths: List[Path],
+    fmt: str,
+    expected_columns: List[str] | None,
+) -> List[Path]:
+    return sorted(
+        paths,
+        key=lambda p: (
+            -_column_overlap_score(p, fmt, expected_columns),
+            *_rank_path(p),
+        ),
+    )
+
+
+def _find_file(
+    data_roots: List[str],
+    rel_path: str | None,
+    file_pattern: str | None,
+    fmt: str,
+    expected_columns: List[str] | None = None,
+) -> Tuple[Optional[Path], str]:
     names = _candidate_names(rel_path, file_pattern)
+    fmt = (fmt or "").lower().strip(".")
 
     for root_str in data_roots:
         root = Path(root_str)
+
         if not root.exists():
             continue
 
         for name in names:
             direct = root / name
-            if direct.exists() and direct.is_file():
+
+            if _valid_file(direct):
                 return direct, "direct"
 
         for name in names:
             basename = Path(name).name
-            matches = list(root.rglob(basename))
+
+            matches = [
+                p for p in root.rglob(basename)
+                if _valid_file(p)
+            ]
+
+            matches = _rank_candidates(
+                matches,
+                fmt,
+                expected_columns,
+            )
+
             if matches:
                 return matches[0], "basename_search"
 
         if fmt:
-            matches = list(root.rglob(f"*.{fmt}"))
+            matches = [
+                p for p in root.rglob(f"*.{fmt}")
+                if _valid_file(p)
+            ]
+
+            matches = _rank_candidates(
+                matches,
+                fmt,
+                expected_columns,
+            )
+
             if matches:
                 return matches[0], "extension_fallback"
 
@@ -122,33 +266,78 @@ def load_tabular_from_roots(
     rel_path: str | None,
     fmt: str,
     file_pattern: str | None = None,
+    expected_columns: List[str] | None = None,
 ):
-    path, strategy = _find_file(data_roots, rel_path, file_pattern, fmt)
+    path, strategy = _find_file(
+        data_roots=data_roots,
+        rel_path=rel_path,
+        file_pattern=file_pattern,
+        fmt=fmt,
+        expected_columns=expected_columns,
+    )
 
     if path is None:
-        return None, LoadResult(ok=False, path=None, strategy=strategy, error="file_not_found")
+        return (
+            None,
+            LoadResult(
+                ok=False,
+                path=None,
+                strategy=strategy,
+                error="file_not_found",
+            ),
+        )
 
     try:
-        fmt = (fmt or "").lower()
+        fmt = (fmt or "").lower().strip(".")
+
         if fmt == "csv":
             df = pd.read_csv(path)
+
         elif fmt == "tsv":
             df = pd.read_csv(path, sep="\t")
+
         elif fmt in {"xlsx", "xls"}:
             df = pd.read_excel(path)
+
         elif fmt == "json":
             df = pd.read_json(path)
+
         elif fmt == "jsonl":
             df = pd.read_json(path, lines=True)
+
         elif fmt == "parquet":
             df = pd.read_parquet(path)
-        else:
-            return None, LoadResult(ok=False, path=str(path), strategy=strategy, error=f"unsupported_format:{fmt}")
 
-        return df, LoadResult(ok=True, path=str(path), strategy=strategy)
+        else:
+            return (
+                None,
+                LoadResult(
+                    ok=False,
+                    path=str(path),
+                    strategy=strategy,
+                    error=f"unsupported_format:{fmt}",
+                ),
+            )
+
+        return (
+            df,
+            LoadResult(
+                ok=True,
+                path=str(path),
+                strategy=strategy,
+            ),
+        )
 
     except Exception as exc:
-        return None, LoadResult(ok=False, path=str(path), strategy=strategy, error=f"{type(exc).__name__}: {exc}")
+        return (
+            None,
+            LoadResult(
+                ok=False,
+                path=str(path),
+                strategy=strategy,
+                error=f"{type(exc).__name__}: {exc}",
+            ),
+        )
 ''',
     )
 
@@ -181,27 +370,75 @@ def validate_dataframe(
         items.append(ValidationItem("df_exists", False, "df is None"))
         return {"ok": False, "items": [asdict(x) for x in items]}
 
-    items.append(ValidationItem("non_empty_rows", df.shape[0] > 0, f"{df.shape[0]} rows"))
-    items.append(ValidationItem("non_empty_cols", df.shape[1] > 0, f"{df.shape[1]} cols"))
+    items.append(
+        ValidationItem(
+            "non_empty_rows",
+            df.shape[0] > 0,
+            f"{df.shape[0]} rows",
+        )
+    )
+
+    items.append(
+        ValidationItem(
+            "non_empty_cols",
+            df.shape[1] > 0,
+            f"{df.shape[1]} cols",
+        )
+    )
 
     if expected_columns:
-        missing = [c for c in expected_columns if c not in df.columns]
+        missing = [
+            c for c in expected_columns
+            if c not in df.columns
+        ]
+
         items.append(
             ValidationItem(
                 "expected_columns",
                 len(missing) == 0,
-                "all expected columns present" if not missing else f"missing: {missing[:20]}",
+                "all expected columns present"
+                if not missing
+                else f"missing: {missing[:20]}",
             )
         )
 
     try:
-        miss_rate = float(df.isna().mean().mean()) if df.size > 0 else 0.0
-        items.append(ValidationItem("missingness_rate", True, f"{miss_rate:.4f}"))
-    except Exception as exc:
-        items.append(ValidationItem("missingness_rate", False, f"{type(exc).__name__}: {exc}"))
+        miss_rate = (
+            float(df.isna().mean().mean())
+            if df.size > 0
+            else 0.0
+        )
 
-    ok = all(item.ok for item in items if item.name in {"non_empty_rows", "non_empty_cols"})
-    return {"ok": ok, "items": [asdict(x) for x in items]}
+        items.append(
+            ValidationItem(
+                "missingness_rate",
+                True,
+                f"{miss_rate:.4f}",
+            )
+        )
+
+    except Exception as exc:
+        items.append(
+            ValidationItem(
+                "missingness_rate",
+                False,
+                f"{type(exc).__name__}: {exc}",
+            )
+        )
+
+    ok = all(
+        item.ok
+        for item in items
+        if item.name in {
+            "non_empty_rows",
+            "non_empty_cols",
+        }
+    )
+
+    return {
+        "ok": ok,
+        "items": [asdict(x) for x in items],
+    }
 ''',
     )
 
@@ -218,18 +455,27 @@ import pandas as pd
 
 def basic_profile(df: pd.DataFrame) -> Dict[str, Any]:
     if df is None:
-        return {"ok": False, "error": "df is None"}
+        return {
+            "ok": False,
+            "error": "df is None",
+        }
 
     out: Dict[str, Any] = {
         "ok": True,
         "n_rows": int(df.shape[0]),
         "n_cols": int(df.shape[1]),
         "columns": [str(c) for c in df.columns],
-        "dtypes": {str(k): str(v) for k, v in df.dtypes.to_dict().items()},
+        "dtypes": {
+            str(k): str(v)
+            for k, v in df.dtypes.to_dict().items()
+        },
     }
 
     try:
-        out["describe_numeric"] = df.describe(include=["number"]).to_dict()
+        out["describe_numeric"] = df.describe(
+            include=["number"]
+        ).to_dict()
+
     except Exception:
         out["describe_numeric"] = {}
 
@@ -259,7 +505,12 @@ def main() -> None:
     if not MANIFEST.exists():
         raise SystemExit("generated_manifest.json not found")
 
-    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    manifest = json.loads(
+        MANIFEST.read_text(
+            encoding="utf-8",
+        )
+    )
+
     selected = manifest.get("selected_primary_files", [])
     data_roots = manifest.get("data_roots", [])
 
@@ -272,16 +523,19 @@ def main() -> None:
     }
 
     for file_info in selected:
+        expected_columns = file_info.get("expected_columns")
+
         df, load_result = load_tabular_from_roots(
             data_roots=data_roots,
             rel_path=file_info.get("path"),
             fmt=file_info.get("format") or "",
             file_pattern=file_info.get("file_pattern"),
+            expected_columns=expected_columns,
         )
 
         validation = validate_dataframe(
             df,
-            expected_columns=file_info.get("expected_columns"),
+            expected_columns=expected_columns,
         )
 
         profile = basic_profile(df)
@@ -296,7 +550,11 @@ def main() -> None:
         )
 
     (HERE / "run_output.json").write_text(
-        json.dumps(output, ensure_ascii=False, indent=2),
+        json.dumps(
+            output,
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
 

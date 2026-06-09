@@ -30,6 +30,9 @@ echo "Log dir: ${LOG_DIR}"
 
 python src/artifact_downloading/run_artifact_downloader.py \
   --run-name "${RUN_NAME}" \
+  --timeout 5 \
+  --max-file-size-mb 500 \
+  --max-repo-size-mb 1000 \
   --manifest "${MANIFEST_DIR}/artifact_download_manifest.csv" \
   --log-path "${LOG_DIR}/artifact_downloader.log"
 

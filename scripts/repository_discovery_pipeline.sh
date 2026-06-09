@@ -22,40 +22,39 @@ echo "Run directory: ${RUN_DIR}"
 
 echo "Starting repository discovery pipeline..."
 
-python src/extraction/run_dataset_extraction.py \
-  --run-name "${RUN_NAME}" \
-  --overwrite \
-  --manifest "${MANIFEST_DIR}/dataset_extraction_manifest.csv" \
-  --log-path "${LOG_DIR}/dataset_extraction.log" &
+#python src/extraction/run_dataset_extraction.py \
+#  --run-name "${RUN_NAME}" \
+#  --overwrite \
+#  --manifest "${MANIFEST_DIR}/dataset_extraction_manifest.csv" \
+#  --log-path "${LOG_DIR}/dataset_extraction.log" &
 
-PID_DATASET=$!
+#PID_DATASET=$!
 
-python src/extraction/run_code_repository_extraction.py \
-  --run-name "${RUN_NAME}" \
-  --overwrite \
-  --manifest "${MANIFEST_DIR}/code_repository_extraction_manifest.csv" \
-  --log-path "${LOG_DIR}/code_repository_extraction.log" &
+#python src/extraction/run_code_repository_extraction.py \
+#  --run-name "${RUN_NAME}" \
+#  --overwrite \
+#  --manifest "${MANIFEST_DIR}/code_repository_extraction_manifest.csv" \
+#  --log-path "${LOG_DIR}/code_repository_extraction.log" 
 
-PID_CODE=$!
+#PID_CODE=$!
 
-wait "$PID_DATASET"
-wait "$PID_CODE"
+#wait "$PID_DATASET"
+#wait "$PID_CODE"
 
-python src/validation/run_url_validation.py \
-  --run-name "${RUN_NAME}" \
-  --overwrite \
-  --manifest "${MANIFEST_DIR}/url_validation_manifest.csv" \
-  --log-path "${LOG_DIR}/url_validation.log"
+#python src/validation/run_url_validation.py \
+#  --run-name "${RUN_NAME}" \
+#  --overwrite \
+#  --manifest "${MANIFEST_DIR}/url_validation_manifest.csv" \
+#  --log-path "${LOG_DIR}/url_validation.log"
 
-python src/repository_crawling/run_repository_crawler.py \
-  --run-name "${RUN_NAME}" \
-  --overwrite \
-  --manifest "${MANIFEST_DIR}/repository_crawl_manifest.csv" \
-  --log-path "${LOG_DIR}/repository_crawler.log"
+#python src/repository_crawling/run_repository_crawler.py \
+#  --run-name "${RUN_NAME}" \
+#  --overwrite \
+#  --manifest "${MANIFEST_DIR}/repository_crawl_manifest.csv" \
+#  --log-path "${LOG_DIR}/repository_crawler.log"
 
 python src/schema_extraction/run_dataset_structure_extraction.py \
   --run-name "${RUN_NAME}" \
-  --overwrite \
   --manifest "${MANIFEST_DIR}/dataset_structure_extraction_manifest.csv" \
   --log-path "${LOG_DIR}/dataset_structure_extraction.log"
 

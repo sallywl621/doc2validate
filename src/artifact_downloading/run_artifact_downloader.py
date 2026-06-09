@@ -8,6 +8,11 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from src.artifact_downloading.artifact_downloader import ArtifactDownloader
+from src.artifact_downloading.utils import (
+    is_direct_artifact_url,
+    is_github_url,
+    is_zenodo_url,
+)
 from src.utils.config import (
     ensure_run_dirs,
     get_run_article_ids,
@@ -18,21 +23,12 @@ from src.utils.logging import setup_logging
 
 
 def collect_dataset_urls(validation_dir: Path) -> List[str]:
-    """
-    Collect dataset artifact URLs from dataset URL validation results only.
-
-    Important experimental boundary:
-    - This downloader uses dataset URLs only.
-    - It does not use code_repository.json.
-    - It does not use scraped_repository.json as an additional fallback.
-    """
     path = validation_dir / "dataset_url_validation.json"
 
     if not path.exists():
         return []
 
     data = load_json(path)
-
     urls: List[str] = []
 
     for item in data.get("results", []):
@@ -44,14 +40,38 @@ def collect_dataset_urls(validation_dir: Path) -> List[str]:
     return sorted(set(urls))
 
 
-def manifest_has_downloaded_resource(manifest_path: Path) -> bool:
-    """
-    Return True only when an existing article-level artifact manifest
-    contains at least one downloaded resource.
+def classify_download_handler(url: str) -> str:
+    if is_github_url(url):
+        return "github"
+    if is_zenodo_url(url):
+        return "zenodo"
+    if is_direct_artifact_url(url):
+        return "direct_file"
+    return "unsupported_landing_or_unknown"
 
-    This allows automatic reruns for manifests that contain only skipped,
-    failed, or no-artifact results.
-    """
+
+def summarize_download_handlers(urls: List[str]) -> Dict[str, Any]:
+    handlers = [classify_download_handler(u) for u in urls]
+    supported = [
+        h for h in handlers
+        if h in {"github", "zenodo", "direct_file"}
+    ]
+
+    return {
+        "supported_download_url_count": len(supported),
+        "unsupported_download_url_count": len(handlers) - len(supported),
+        "has_supported_download_handler": len(supported) > 0,
+        "download_handler_types": json.dumps(
+            sorted(set(handlers)),
+            ensure_ascii=False,
+        ),
+        "github_url_count": handlers.count("github"),
+        "zenodo_url_count": handlers.count("zenodo"),
+        "direct_file_url_count": handlers.count("direct_file"),
+    }
+
+
+def manifest_has_downloaded_resource(manifest_path: Path) -> bool:
     if not manifest_path.exists():
         return False
 
@@ -75,7 +95,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Download dataset artifacts for execution validation. "
-            "This script intentionally uses dataset URLs only."
+            "This script intentionally uses dataset URLs only and trusts "
+            "the URL validation stage for accessible dataset URL discovery."
         )
     )
 
@@ -122,6 +143,7 @@ def main() -> None:
         status = "unknown"
         error = ""
         candidate_urls: List[str] = []
+        handler_summary: Dict[str, Any] = summarize_download_handlers([])
 
         if (
             manifest_has_downloaded_resource(manifest_path)
@@ -133,9 +155,13 @@ def main() -> None:
             candidate_urls = collect_dataset_urls(
                 structure["validation_dir"]
             )
+            handler_summary = summarize_download_handlers(candidate_urls)
 
             if not candidate_urls:
                 status = "no_dataset_candidate_urls"
+
+            elif not handler_summary["has_supported_download_handler"]:
+                status = "no_supported_download_handler"
 
             else:
                 try:
@@ -180,6 +206,7 @@ def main() -> None:
                     candidate_urls,
                     ensure_ascii=False,
                 ),
+                **handler_summary,
                 "output_dir": str(output_dir),
                 "error": error,
                 "started_at": started,
@@ -188,10 +215,11 @@ def main() -> None:
         )
 
         logging.info(
-            "%s: %s (%d dataset candidate urls)",
+            "%s: %s (%d dataset candidate urls; %d supported)",
             article_id,
             status,
             len(candidate_urls),
+            handler_summary["supported_download_url_count"],
         )
 
     out_manifest = (
