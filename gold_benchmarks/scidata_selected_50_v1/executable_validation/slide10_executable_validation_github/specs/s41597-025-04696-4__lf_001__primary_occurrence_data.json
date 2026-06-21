@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-025-04696-4",
+  "logical_file_id": "lf_001",
+  "logical_name": "primary_occurrence_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-025-04696-4/artifact/github/github_github.com__kalab-oto_zoraptera-occurrence-dataset/zoraptera-occurrence-dataset-main/zoraptera_occs.csv",
+  "target_columns": [
+    "coordinateUncertaintyInMeters",
+    "decimalLatitude",
+    "decimalLongitude",
+    "scientificName",
+    "zodID"
+  ]
+}

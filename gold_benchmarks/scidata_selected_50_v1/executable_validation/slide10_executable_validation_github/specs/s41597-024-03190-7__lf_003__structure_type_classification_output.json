@@ -1,0 +1,11 @@
+{
+  "article_id": "s41597-024-03190-7",
+  "logical_file_id": "lf_003",
+  "logical_name": "structure_type_classification_output",
+  "observed_suffix": ".xlsx",
+  "artifact_relative_path": "s41597-024-03190-7/artifact/github/github_github.com__TomerFishman_MaterialIntensityEstimator/MaterialIntensityEstimator-main/data_input_and_ml_processing/buildings_v2-structure_type_ML.xlsx",
+  "target_columns": [
+    "concrete",
+    "steel"
+  ]
+}

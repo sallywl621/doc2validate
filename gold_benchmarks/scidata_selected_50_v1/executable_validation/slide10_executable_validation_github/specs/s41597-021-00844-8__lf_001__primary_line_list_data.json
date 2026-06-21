@@ -1,0 +1,12 @@
+{
+  "article_id": "s41597-021-00844-8",
+  "logical_file_id": "lf_001",
+  "logical_name": "primary_line_list_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-021-00844-8/artifact/figshare/dataset_EN.csv",
+  "target_columns": [
+    "Age",
+    "Arrival Date",
+    "Gender"
+  ]
+}

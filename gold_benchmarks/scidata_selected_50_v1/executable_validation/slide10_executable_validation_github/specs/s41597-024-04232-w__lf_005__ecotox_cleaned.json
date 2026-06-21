@@ -1,0 +1,12 @@
+{
+  "article_id": "s41597-024-04232-w",
+  "logical_file_id": "lf_005",
+  "logical_name": "ecotox_cleaned",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-024-04232-w/artifact/github/github_github.com__j-adamczyk_ApisTox_dataset/ApisTox_dataset-master/outputs/ecotox_cleaned_data.csv",
+  "target_columns": [
+    "CAS",
+    "SMILES",
+    "label"
+  ]
+}

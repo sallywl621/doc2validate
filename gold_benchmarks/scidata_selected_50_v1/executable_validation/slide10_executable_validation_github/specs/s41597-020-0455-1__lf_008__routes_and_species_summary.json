@@ -1,0 +1,10 @@
+{
+  "article_id": "s41597-020-0455-1",
+  "logical_file_id": "lf_008",
+  "logical_name": "routes_and_species_summary",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-020-0455-1/artifact/github/github_github.com__USEPA_CompTox-PK-CvTdb/CompTox-PK-CvTdb-master/archive/routes_and_species_per_chemical.csv",
+  "target_columns": [
+    "test_substance_DTXSID"
+  ]
+}

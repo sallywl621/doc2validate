@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-022-01437-9",
+  "logical_file_id": "lf_001",
+  "logical_name": "Country-level PPI aggregates (Method 1)",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-022-01437-9/artifact/github/github_github.com__COVID-policy-response-lab_PPI-data/PPI-data-main/data/PPI_country_m1.csv",
+  "target_columns": [
+    "cname",
+    "date",
+    "isoabbr",
+    "isocode",
+    "ppi.all.tot.ave"
+  ]
+}

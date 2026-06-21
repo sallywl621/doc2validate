@@ -1,0 +1,10 @@
+{
+  "article_id": "s41597-024-03368-z",
+  "logical_file_id": "lf_004",
+  "logical_name": "APD_glossary",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-024-03368-z/artifact/github/github_github.com__traitecoevo_APD/APD-master/data/APD_glossary.csv",
+  "target_columns": [
+    "description"
+  ]
+}

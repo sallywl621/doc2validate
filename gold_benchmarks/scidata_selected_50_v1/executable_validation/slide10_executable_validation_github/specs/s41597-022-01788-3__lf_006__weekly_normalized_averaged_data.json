@@ -1,0 +1,12 @@
+{
+  "article_id": "s41597-022-01788-3",
+  "logical_file_id": "lf_006",
+  "logical_name": "weekly_normalized_averaged_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-022-01788-3/artifact/github/github_github.com__BioRDM_COVID-Wastewater-Scotland/COVID-Wastewater-Scotland-main/data/weekly_norm_prevalence_timeseries.csv",
+  "target_columns": [
+    "2022-06",
+    "Health_Board",
+    "Site"
+  ]
+}

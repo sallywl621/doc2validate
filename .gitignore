@@ -1,15 +1,68 @@
-# Raw data (do not upload)
-data/raw_pdfs/
-data/raw_landing_pages/
+# Raw and local corpus data
+data/
 
-# Optional: cache / temp
-data/tmp/
-data/cache/
+# Local corpus/run outputs
+results/
 
-# Execution artifacts 
-results/runs/
-results/logs/
+# Large benchmark raw artifacts
+gold_benchmarks/**/artifact/
+gold_benchmarks/**/pdf/
+gold_benchmarks/**/notebooks/
+gold_benchmarks/**/json/
 
+# Optional local benchmark caches
+gold_benchmarks/**/cache/
+gold_benchmarks/**/tmp/
+
+# Temporary and cache files
+tmp/
+temp/
+.cache/
+*.tmp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Jupyter scratch
+notebooks/**/Untitled*.ipynb
 
 # Local private configs
 src/utils/local_config.py
+.env
+.env.*
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Local archives
+archive/local_only/
+
+
+# Selected-50 local per-article workspaces
+gold_benchmarks/scidata_selected_50_v1/s41597-*/
+gold_benchmarks/scidata_selected_50_v1/sdata2018310/
+
+# Selected-50 full local run outputs
+gold_benchmarks/scidata_selected_50_v1/grounding_v2/
+gold_benchmarks/scidata_selected_50_v1/grounding_v2_hardfilter_0618/
+
+# Logs
+*.log
+gold_benchmarks/**/*.log
+
+# Large or intermediate generated JSON workspaces
+gold_benchmarks/**/json/
+
+# Selected-50 old benchmark run archives, kept locally
+gold_benchmarks/scidata_selected_50_v1/archive/old_affordance/
+gold_benchmarks/scidata_selected_50_v1/archive/old_grounding/
+gold_benchmarks/scidata_selected_50_v1/archive/old_grounding_v2_dir/
+gold_benchmarks/scidata_selected_50_v1/archive/single_case_runs/
+gold_benchmarks/scidata_selected_50_v1/article_cases/

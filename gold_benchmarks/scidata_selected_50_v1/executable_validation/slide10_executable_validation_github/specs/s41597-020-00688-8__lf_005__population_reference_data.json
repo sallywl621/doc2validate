@@ -1,0 +1,11 @@
+{
+  "article_id": "s41597-020-00688-8",
+  "logical_file_id": "lf_005",
+  "logical_name": "population_reference_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-020-00688-8/artifact/figshare/un-2020-population.csv",
+  "target_columns": [
+    "Country",
+    "Population"
+  ]
+}

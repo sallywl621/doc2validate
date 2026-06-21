@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-020-00688-8",
+  "logical_file_id": "lf_004",
+  "logical_name": "raw_collected_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-020-00688-8/artifact/figshare/raw-collected-data.csv",
+  "target_columns": [
+    "Country",
+    "Cumulative total",
+    "Date",
+    "Notes",
+    "Source URL"
+  ]
+}

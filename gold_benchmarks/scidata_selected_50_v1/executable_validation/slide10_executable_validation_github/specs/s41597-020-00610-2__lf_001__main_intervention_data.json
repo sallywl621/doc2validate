@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-020-00610-2",
+  "logical_file_id": "lf_001",
+  "logical_name": "main_intervention_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-020-00610-2/artifact/github/github_github.com__HopkinsIDD_hit-covid/hit-covid-master/data/hit-covid-longdata.csv",
+  "target_columns": [
+    "date_of_update",
+    "entry_quality",
+    "intervention_name",
+    "record_id",
+    "unique_id"
+  ]
+}

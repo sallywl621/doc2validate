@@ -1,0 +1,12 @@
+{
+  "article_id": "s41597-022-01146-3",
+  "logical_file_id": "lf_001",
+  "logical_name": "settlement_stage_fish_ids",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-022-01146-3/artifact/github/github_github.com__open-AIMS_tropical_ucrit_data/tropical_ucrit_data-main/clean_data/fish_id_dat.csv",
+  "target_columns": [
+    "fish_id",
+    "species_id",
+    "stage"
+  ]
+}

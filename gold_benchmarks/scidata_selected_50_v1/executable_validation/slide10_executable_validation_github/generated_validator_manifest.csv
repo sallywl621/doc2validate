@@ -1,0 +1,70 @@
+article_id,logical_file_id,logical_name,spec,validator,target_columns
+s41597-020-00688-8,lf_001,testing_time_series,specs/s41597-020-00688-8__lf_001__testing_time_series.json,generated_validators/s41597-020-00688-8__lf_001__testing_time_series.py,5
+s41597-020-00688-8,lf_002,testing_time_series_derived,specs/s41597-020-00688-8__lf_002__testing_time_series_derived.json,generated_validators/s41597-020-00688-8__lf_002__testing_time_series_derived.py,4
+s41597-020-00688-8,lf_003,testing_metadata,specs/s41597-020-00688-8__lf_003__testing_metadata.json,generated_validators/s41597-020-00688-8__lf_003__testing_metadata.py,5
+s41597-020-00688-8,lf_004,raw_collected_data,specs/s41597-020-00688-8__lf_004__raw_collected_data.json,generated_validators/s41597-020-00688-8__lf_004__raw_collected_data.py,5
+s41597-020-00688-8,lf_005,population_reference_data,specs/s41597-020-00688-8__lf_005__population_reference_data.json,generated_validators/s41597-020-00688-8__lf_005__population_reference_data.py,2
+s41597-021-01069-5,lf_005,raw_data_summary,specs/s41597-021-01069-5__lf_005__raw_data_summary.json,generated_validators/s41597-021-01069-5__lf_005__raw_data_summary.py,1
+s41597-022-01146-3,lf_001,settlement_stage_fish_ids,specs/s41597-022-01146-3__lf_001__settlement_stage_fish_ids.json,generated_validators/s41597-022-01146-3__lf_001__settlement_stage_fish_ids.py,3
+s41597-022-01146-3,lf_002,settlement_stage_swimming_data,specs/s41597-022-01146-3__lf_002__settlement_stage_swimming_data.json,generated_validators/s41597-022-01146-3__lf_002__settlement_stage_swimming_data.py,2
+s41597-022-01146-3,lf_003,settlement_stage_morphology_data,specs/s41597-022-01146-3__lf_003__settlement_stage_morphology_data.json,generated_validators/s41597-022-01146-3__lf_003__settlement_stage_morphology_data.py,1
+s41597-022-01146-3,lf_004,developmental_sample_data,specs/s41597-022-01146-3__lf_004__developmental_sample_data.json,generated_validators/s41597-022-01146-3__lf_004__developmental_sample_data.py,3
+s41597-022-01146-3,lf_005,developmental_swimming_data,specs/s41597-022-01146-3__lf_005__developmental_swimming_data.json,generated_validators/s41597-022-01146-3__lf_005__developmental_swimming_data.py,2
+s41597-022-01146-3,lf_006,developmental_morphology_data,specs/s41597-022-01146-3__lf_006__developmental_morphology_data.json,generated_validators/s41597-022-01146-3__lf_006__developmental_morphology_data.py,1
+s41597-022-01146-3,lf_008,image_data,specs/s41597-022-01146-3__lf_008__image_data.json,generated_validators/s41597-022-01146-3__lf_008__image_data.py,3
+s41597-022-01473-5,lf_001,resource_level_traits,specs/s41597-022-01473-5__lf_001__resource_level_traits.json,generated_validators/s41597-022-01473-5__lf_001__resource_level_traits.py,3
+s41597-022-01473-5,lf_002,species_consensus_traits,specs/s41597-022-01473-5__lf_002__species_consensus_traits.json,generated_validators/s41597-022-01473-5__lf_002__species_consensus_traits.py,4
+s41597-022-01473-5,lf_003,resource_metadata,specs/s41597-022-01473-5__lf_003__resource_metadata.json,generated_validators/s41597-022-01473-5__lf_003__resource_metadata.py,2
+s41597-022-01473-5,lf_005,habitat_code_key,specs/s41597-022-01473-5__lf_005__habitat_code_key.json,generated_validators/s41597-022-01473-5__lf_005__habitat_code_key.py,1
+s41597-020-00676-y,lf_001,Diet data,specs/s41597-020-00676-y__lf_001__Diet_data.json,generated_validators/s41597-020-00676-y__lf_001__Diet_data.py,4
+s41597-020-00676-y,lf_002,Predator biological data,specs/s41597-020-00676-y__lf_002__Predator_biological_data.json,generated_validators/s41597-020-00676-y__lf_002__Predator_biological_data.py,2
+s41597-020-00676-y,lf_003,Prey biological data,specs/s41597-020-00676-y__lf_003__Prey_biological_data.json,generated_validators/s41597-020-00676-y__lf_003__Prey_biological_data.py,1
+s41597-020-00676-y,lf_005,Sources,specs/s41597-020-00676-y__lf_005__Sources.json,generated_validators/s41597-020-00676-y__lf_005__Sources.py,5
+s41597-020-00676-y,lf_006,Gear type predator,specs/s41597-020-00676-y__lf_006__Gear_type_predator.json,generated_validators/s41597-020-00676-y__lf_006__Gear_type_predator.py,2
+s41597-020-00676-y,lf_007,Gear type prey,specs/s41597-020-00676-y__lf_007__Gear_type_prey.json,generated_validators/s41597-020-00676-y__lf_007__Gear_type_prey.py,2
+s41597-021-00844-8,lf_001,primary_line_list_data,specs/s41597-021-00844-8__lf_001__primary_line_list_data.json,generated_validators/s41597-021-00844-8__lf_001__primary_line_list_data.py,3
+s41597-021-00844-8,lf_002,data_sources_metadata,specs/s41597-021-00844-8__lf_002__data_sources_metadata.json,generated_validators/s41597-021-00844-8__lf_002__data_sources_metadata.py,2
+s41597-021-00844-8,lf_003,missing_data_reasons,specs/s41597-021-00844-8__lf_003__missing_data_reasons.json,generated_validators/s41597-021-00844-8__lf_003__missing_data_reasons.py,1
+s41597-021-00844-8,lf_004,original_text_corpus,specs/s41597-021-00844-8__lf_004__original_text_corpus.json,generated_validators/s41597-021-00844-8__lf_004__original_text_corpus.py,1
+s41597-022-01850-0,lf_001,Short-term anonymized LPR data,specs/s41597-022-01850-0__lf_001__Short-term_anonymized_LPR_data.json,generated_validators/s41597-022-01850-0__lf_001__Short-term_anonymized_LPR_data.py,1
+s41597-020-00609-9,lf_001,primary_interventions_data,specs/s41597-020-00609-9__lf_001__primary_interventions_data.json,generated_validators/s41597-020-00609-9__lf_001__primary_interventions_data.py,5
+s41597-020-00609-9,lf_002,master_list_of_codes,specs/s41597-020-00609-9__lf_002__master_list_of_codes.json,generated_validators/s41597-020-00609-9__lf_002__master_list_of_codes.py,1
+s41597-020-00609-9,lf_003,code_hierarchy_with_frequency,specs/s41597-020-00609-9__lf_003__code_hierarchy_with_frequency.json,generated_validators/s41597-020-00609-9__lf_003__code_hierarchy_with_frequency.py,4
+s41597-020-0455-1,lf_008,routes_and_species_summary,specs/s41597-020-0455-1__lf_008__routes_and_species_summary.json,generated_validators/s41597-020-0455-1__lf_008__routes_and_species_summary.py,1
+s41597-020-00610-2,lf_001,main_intervention_data,specs/s41597-020-00610-2__lf_001__main_intervention_data.json,generated_validators/s41597-020-00610-2__lf_001__main_intervention_data.py,5
+s41597-020-00610-2,lf_002,completeness_assessment_data,specs/s41597-020-00610-2__lf_002__completeness_assessment_data.json,generated_validators/s41597-020-00610-2__lf_002__completeness_assessment_data.py,5
+s41597-022-01255-z,lf_001,knee_annotations,specs/s41597-022-01255-z__lf_001__knee_annotations.json,generated_validators/s41597-022-01255-z__lf_001__knee_annotations.py,4
+s41597-022-01255-z,lf_002,brain_annotations,specs/s41597-022-01255-z__lf_002__brain_annotations.json,generated_validators/s41597-022-01255-z__lf_002__brain_annotations.py,4
+s41597-022-01432-0,lf_005,dataset_inventory,specs/s41597-022-01432-0__lf_005__dataset_inventory.json,generated_validators/s41597-022-01432-0__lf_005__dataset_inventory.py,2
+s41597-022-01437-9,lf_001,Country-level PPI aggregates (Method 1),specs/s41597-022-01437-9__lf_001__Country-level_PPI_aggregates_Method_1.json,generated_validators/s41597-022-01437-9__lf_001__Country-level_PPI_aggregates_Method_1.py,5
+s41597-022-01437-9,lf_002,Country-level PPI aggregates (Method 2),specs/s41597-022-01437-9__lf_002__Country-level_PPI_aggregates_Method_2.json,generated_validators/s41597-022-01437-9__lf_002__Country-level_PPI_aggregates_Method_2.py,5
+s41597-022-01437-9,lf_005,Policy change log (Method 1),specs/s41597-022-01437-9__lf_005__Policy_change_log_Method_1.json,generated_validators/s41597-022-01437-9__lf_005__Policy_change_log_Method_1.py,4
+s41597-022-01704-9,lf_001,raw_data,specs/s41597-022-01704-9__lf_001__raw_data.json,generated_validators/s41597-022-01704-9__lf_001__raw_data.py,3
+s41597-022-01704-9,lf_002,curated_data,specs/s41597-022-01704-9__lf_002__curated_data.json,generated_validators/s41597-022-01704-9__lf_002__curated_data.py,1
+s41597-022-01704-9,lf_003,metadata,specs/s41597-022-01704-9__lf_003__metadata.json,generated_validators/s41597-022-01704-9__lf_003__metadata.py,1
+s41597-022-01704-9,lf_005,taxonomic_classification,specs/s41597-022-01704-9__lf_005__taxonomic_classification.json,generated_validators/s41597-022-01704-9__lf_005__taxonomic_classification.py,2
+s41597-022-01788-3,lf_001,main_raw_data,specs/s41597-022-01788-3__lf_001__main_raw_data.json,generated_validators/s41597-022-01788-3__lf_001__main_raw_data.py,5
+s41597-022-01788-3,lf_002,enriched_site_data,specs/s41597-022-01788-3__lf_002__enriched_site_data.json,generated_validators/s41597-022-01788-3__lf_002__enriched_site_data.py,5
+s41597-022-01788-3,lf_003,wide_format_time_series,specs/s41597-022-01788-3__lf_003__wide_format_time_series.json,generated_validators/s41597-022-01788-3__lf_003__wide_format_time_series.py,3
+s41597-022-01788-3,lf_004,normalized_wide_time_series,specs/s41597-022-01788-3__lf_004__normalized_wide_time_series.json,generated_validators/s41597-022-01788-3__lf_004__normalized_wide_time_series.py,3
+s41597-022-01788-3,lf_005,weekly_averaged_data,specs/s41597-022-01788-3__lf_005__weekly_averaged_data.json,generated_validators/s41597-022-01788-3__lf_005__weekly_averaged_data.py,3
+s41597-022-01788-3,lf_006,weekly_normalized_averaged_data,specs/s41597-022-01788-3__lf_006__weekly_normalized_averaged_data.json,generated_validators/s41597-022-01788-3__lf_006__weekly_normalized_averaged_data.py,3
+s41597-023-02676-0,lf_008,latest_combined_dataset,specs/s41597-023-02676-0__lf_008__latest_combined_dataset.json,generated_validators/s41597-023-02676-0__lf_008__latest_combined_dataset.py,5
+s41597-024-03368-z,lf_001,APD_traits_input,specs/s41597-024-03368-z__lf_001__APD_traits_input.json,generated_validators/s41597-024-03368-z__lf_001__APD_traits_input.py,3
+s41597-024-03368-z,lf_002,APD_categorical_values_input,specs/s41597-024-03368-z__lf_002__APD_categorical_values_input.json,generated_validators/s41597-024-03368-z__lf_002__APD_categorical_values_input.py,3
+s41597-024-03368-z,lf_003,APD_trait_hierarchy,specs/s41597-024-03368-z__lf_003__APD_trait_hierarchy.json,generated_validators/s41597-024-03368-z__lf_003__APD_trait_hierarchy.py,2
+s41597-024-03368-z,lf_004,APD_glossary,specs/s41597-024-03368-z__lf_004__APD_glossary.json,generated_validators/s41597-024-03368-z__lf_004__APD_glossary.py,1
+s41597-024-03368-z,lf_005,APD_references,specs/s41597-024-03368-z__lf_005__APD_references.json,generated_validators/s41597-024-03368-z__lf_005__APD_references.py,1
+s41597-024-03368-z,lf_006,APD_reviewers,specs/s41597-024-03368-z__lf_006__APD_reviewers.json,generated_validators/s41597-024-03368-z__lf_006__APD_reviewers.py,1
+s41597-024-03368-z,lf_007,APD_units,specs/s41597-024-03368-z__lf_007__APD_units.json,generated_validators/s41597-024-03368-z__lf_007__APD_units.py,3
+s41597-024-04232-w,lf_001,final_dataset,specs/s41597-024-04232-w__lf_001__final_dataset.json,generated_validators/s41597-024-04232-w__lf_001__final_dataset.py,5
+s41597-024-04232-w,lf_002,ecotox_raw,specs/s41597-024-04232-w__lf_002__ecotox_raw.json,generated_validators/s41597-024-04232-w__lf_002__ecotox_raw.py,1
+s41597-024-04232-w,lf_003,ppdb_raw,specs/s41597-024-04232-w__lf_003__ppdb_raw.json,generated_validators/s41597-024-04232-w__lf_003__ppdb_raw.py,5
+s41597-024-04232-w,lf_004,bpdb_raw,specs/s41597-024-04232-w__lf_004__bpdb_raw.json,generated_validators/s41597-024-04232-w__lf_004__bpdb_raw.py,5
+s41597-024-04232-w,lf_005,ecotox_cleaned,specs/s41597-024-04232-w__lf_005__ecotox_cleaned.json,generated_validators/s41597-024-04232-w__lf_005__ecotox_cleaned.py,3
+s41597-024-04232-w,lf_006,excluded_data,specs/s41597-024-04232-w__lf_006__excluded_data.json,generated_validators/s41597-024-04232-w__lf_006__excluded_data.py,1
+s41597-022-01543-8,lf_001,primary_data,specs/s41597-022-01543-8__lf_001__primary_data.json,generated_validators/s41597-022-01543-8__lf_001__primary_data.py,5
+s41597-022-01543-8,lf_005,excluded_reports_log,specs/s41597-022-01543-8__lf_005__excluded_reports_log.json,generated_validators/s41597-022-01543-8__lf_005__excluded_reports_log.py,1
+s41597-023-02724-9,lf_003,contributors_list,specs/s41597-023-02724-9__lf_003__contributors_list.json,generated_validators/s41597-023-02724-9__lf_003__contributors_list.py,4
+s41597-024-03190-7,lf_003,structure_type_classification_output,specs/s41597-024-03190-7__lf_003__structure_type_classification_output.json,generated_validators/s41597-024-03190-7__lf_003__structure_type_classification_output.py,2
+s41597-025-04696-4,lf_001,primary_occurrence_data,specs/s41597-025-04696-4__lf_001__primary_occurrence_data.json,generated_validators/s41597-025-04696-4__lf_001__primary_occurrence_data.py,5

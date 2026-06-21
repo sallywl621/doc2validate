@@ -1,0 +1,10 @@
+{
+  "article_id": "s41597-022-01704-9",
+  "logical_file_id": "lf_002",
+  "logical_name": "curated_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-022-01704-9/artifact/github/github_github.com__p-pottier_Amphibian_upper_thermal_limits/Amphibian_upper_thermal_limits-main/data/Curated_data.csv",
+  "target_columns": [
+    "species"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-023-02676-0",
+  "logical_file_id": "lf_008",
+  "logical_name": "latest_combined_dataset",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-023-02676-0/artifact/github/github_github.com__fbranda_west-nile/west-nile-main/latest-wnv.csv",
+  "target_columns": [
+    "data",
+    "host",
+    "name_province",
+    "new_cases",
+    "total_cases"
+  ]
+}

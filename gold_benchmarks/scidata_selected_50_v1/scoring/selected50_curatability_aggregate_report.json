@@ -1,0 +1,362 @@
+{
+  "created_at": "2026-06-16T16:21:23.393811",
+  "benchmark_root": "/mydata/doc2validate/gold_benchmarks/scidata_selected_50_v1",
+  "n_articles": 50,
+  "score_distribution": {
+    "overall_score": {
+      "count": 50,
+      "mean": 0.591,
+      "std": 0.2088,
+      "min": 0.2,
+      "p25": 0.4655,
+      "median": 0.5398,
+      "p75": 0.7586,
+      "max": 0.9793
+    }
+  },
+  "component_means": {
+    "logical_schema_score": 0.9349,
+    "physical_grounding_score": 0.5156,
+    "executable_preview_score": 0.6215,
+    "review_burden_score": 0.3446,
+    "intervention_need_score": 0.5613,
+    "overall_score": 0.591
+  },
+  "recommendation_counts": {
+    "request_supplementary_materials_or_manual_mapping": 23,
+    "accept_for_ingest_with_light_review": 14,
+    "accept_with_curator_review": 9,
+    "high_risk_manual_review": 4
+  },
+  "execution_status_counts": {
+    "success": 50
+  },
+  "grounding_totals": {
+    "total_logical_files": 325,
+    "total_file_grounding_applicable": 324,
+    "total_resolved": 119,
+    "total_ambiguous": 84,
+    "total_weak_match": 43,
+    "total_missing": 78,
+    "total_human_review_needed": 206,
+    "resolved_rate": 0.3673
+  },
+  "preview_totals": {
+    "total_preview_rows": 394,
+    "tabular_preview_success": 210,
+    "preview_non_success": 184,
+    "tabular_preview_success_rate": 0.533,
+    "preview_outcome_counts": {
+      "tabular_preview_success": 210,
+      "csv_encoding_error": 22,
+      "code_or_notebook_artifact_not_tabular": 52,
+      "archive_artifact_requires_unpacking": 22,
+      "missing_optional_dependency_xlrd": 1,
+      "specialized_data_format_requires_loader": 19,
+      "structured_metadata_not_tabular": 21,
+      "document_or_text_artifact_not_tabular": 29,
+      "unsupported_format": 12,
+      "image_artifact_not_tabular": 6
+    }
+  },
+  "issue_totals": [
+    {
+      "issue_scope": "physical_grounding",
+      "issue_type": "num_ambiguous",
+      "count": 84
+    },
+    {
+      "issue_scope": "physical_grounding",
+      "issue_type": "num_missing",
+      "count": 78
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "code_or_notebook_artifact_not_tabular",
+      "count": 52
+    },
+    {
+      "issue_scope": "physical_grounding",
+      "issue_type": "num_weak_match",
+      "count": 43
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "document_or_text_artifact_not_tabular",
+      "count": 29
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "csv_encoding_error",
+      "count": 22
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "archive_artifact_requires_unpacking",
+      "count": 22
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "structured_metadata_not_tabular",
+      "count": 21
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "specialized_data_format_requires_loader",
+      "count": 19
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "unsupported_format",
+      "count": 12
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "image_artifact_not_tabular",
+      "count": 6
+    },
+    {
+      "issue_scope": "physical_grounding",
+      "issue_type": "num_unsupported_non_file_claim",
+      "count": 1
+    },
+    {
+      "issue_scope": "executable_preview",
+      "issue_type": "missing_optional_dependency_xlrd",
+      "count": 1
+    }
+  ],
+  "lowest_overall_score_cases": [
+    {
+      "article_id": "sdata2018310",
+      "overall_score": "0.20000000000000004",
+      "recommendation": "high_risk_manual_review",
+      "physical_grounding_score": "0.0",
+      "executable_preview_score": "0.0",
+      "review_burden_score": "0.0",
+      "num_missing": "3",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "3"
+    },
+    {
+      "article_id": "s41597-023-02749-0",
+      "overall_score": "0.20000000000000004",
+      "recommendation": "high_risk_manual_review",
+      "physical_grounding_score": "0.0",
+      "executable_preview_score": "0.0",
+      "review_burden_score": "0.0",
+      "num_missing": "6",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "6"
+    },
+    {
+      "article_id": "s41597-022-01141-8",
+      "overall_score": "0.23825000000000007",
+      "recommendation": "high_risk_manual_review",
+      "physical_grounding_score": "0.0625",
+      "executable_preview_score": "0.2",
+      "review_burden_score": "0.0",
+      "num_missing": "7",
+      "num_ambiguous": "1",
+      "num_human_review_needed": "8"
+    },
+    {
+      "article_id": "s41597-021-00929-4",
+      "overall_score": "0.26039000000000007",
+      "recommendation": "high_risk_manual_review",
+      "physical_grounding_score": "0.0938",
+      "executable_preview_score": "0.2",
+      "review_burden_score": "0.0",
+      "num_missing": "6",
+      "num_ambiguous": "1",
+      "num_human_review_needed": "8"
+    },
+    {
+      "article_id": "s41597-023-02160-9",
+      "overall_score": "0.3585961538461539",
+      "recommendation": "request_supplementary_materials_or_manual_mapping",
+      "physical_grounding_score": "0.3125",
+      "executable_preview_score": "0.23846153846153847",
+      "review_burden_score": "0.0",
+      "num_missing": "3",
+      "num_ambiguous": "5",
+      "num_human_review_needed": "8"
+    },
+    {
+      "article_id": "s41597-023-02576-3",
+      "overall_score": "0.36300000000000004",
+      "recommendation": "request_supplementary_materials_or_manual_mapping",
+      "physical_grounding_score": "0.25",
+      "executable_preview_score": "0.19999999999999998",
+      "review_burden_score": "0.0",
+      "num_missing": "0",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "8"
+    },
+    {
+      "article_id": "s41597-020-00702-z",
+      "overall_score": "0.37306128205128214",
+      "recommendation": "request_supplementary_materials_or_manual_mapping",
+      "physical_grounding_score": "0.4167",
+      "executable_preview_score": "0.15384615384615385",
+      "review_burden_score": "0.0",
+      "num_missing": "0",
+      "num_ambiguous": "4",
+      "num_human_review_needed": "6"
+    },
+    {
+      "article_id": "s41597-023-02724-9",
+      "overall_score": "0.3995000000000001",
+      "recommendation": "request_supplementary_materials_or_manual_mapping",
+      "physical_grounding_score": "0.3125",
+      "executable_preview_score": "0.4000000000000001",
+      "review_burden_score": "0.125",
+      "num_missing": "3",
+      "num_ambiguous": "2",
+      "num_human_review_needed": "7"
+    },
+    {
+      "article_id": "s41597-023-02070-w",
+      "overall_score": "0.42940000000000006",
+      "recommendation": "request_supplementary_materials_or_manual_mapping",
+      "physical_grounding_score": "0.05",
+      "executable_preview_score": "1.0",
+      "review_burden_score": "0.0",
+      "num_missing": "4",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "5"
+    },
+    {
+      "article_id": "s41597-022-01850-0",
+      "overall_score": "0.4396900000000001",
+      "recommendation": "request_supplementary_materials_or_manual_mapping",
+      "physical_grounding_score": "0.3438",
+      "executable_preview_score": "0.36",
+      "review_burden_score": "0.25",
+      "num_missing": "4",
+      "num_ambiguous": "1",
+      "num_human_review_needed": "6"
+    }
+  ],
+  "highest_overall_score_cases": [
+    {
+      "article_id": "s41597-022-01473-5",
+      "overall_score": "0.9793",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "1.0",
+      "executable_preview_score": "0.9099999999999999",
+      "review_burden_score": "1.0",
+      "num_missing": "0",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "0"
+    },
+    {
+      "article_id": "s41597-022-01146-3",
+      "overall_score": "0.9510000000000002",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "0.9375",
+      "executable_preview_score": "1.0",
+      "review_burden_score": "0.875",
+      "num_missing": "0",
+      "num_ambiguous": "1",
+      "num_human_review_needed": "1"
+    },
+    {
+      "article_id": "s41597-020-00712-x",
+      "overall_score": "0.9440085714285715",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "0.9286",
+      "executable_preview_score": "1.0",
+      "review_burden_score": "0.8571428571428572",
+      "num_missing": "0",
+      "num_ambiguous": "1",
+      "num_human_review_needed": "1"
+    },
+    {
+      "article_id": "s41597-024-04232-w",
+      "overall_score": "0.9280000000000002",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "0.9375",
+      "executable_preview_score": "0.9",
+      "review_burden_score": "0.875",
+      "num_missing": "0",
+      "num_ambiguous": "1",
+      "num_human_review_needed": "1"
+    },
+    {
+      "article_id": "s41597-020-00688-8",
+      "overall_score": "0.9245000000000003",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "0.875",
+      "executable_preview_score": "1.0",
+      "review_burden_score": "0.8333333333333334",
+      "num_missing": "0",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "1"
+    },
+    {
+      "article_id": "s41597-022-01255-z",
+      "overall_score": "0.9186666666666667",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "1.0",
+      "executable_preview_score": "0.7333333333333334",
+      "review_burden_score": "1.0",
+      "num_missing": "0",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "0"
+    },
+    {
+      "article_id": "s41597-020-00676-y",
+      "overall_score": "0.9186100000000003",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "0.9062",
+      "executable_preview_score": "0.925",
+      "review_burden_score": "0.875",
+      "num_missing": "0",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "1"
+    },
+    {
+      "article_id": "s41597-024-03368-z",
+      "overall_score": "0.8739000000000002",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "0.9375",
+      "executable_preview_score": "0.73",
+      "review_burden_score": "0.875",
+      "num_missing": "0",
+      "num_ambiguous": "1",
+      "num_human_review_needed": "1"
+    },
+    {
+      "article_id": "s41597-022-01788-3",
+      "overall_score": "0.8721100000000002",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "0.7812",
+      "executable_preview_score": "1.0",
+      "review_burden_score": "0.75",
+      "num_missing": "1",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "2"
+    },
+    {
+      "article_id": "s41597-022-01704-9",
+      "overall_score": "0.8259375000000002",
+      "recommendation": "accept_for_ingest_with_light_review",
+      "physical_grounding_score": "1.0",
+      "executable_preview_score": "0.4062500000000001",
+      "review_burden_score": "1.0",
+      "num_missing": "0",
+      "num_ambiguous": "0",
+      "num_human_review_needed": "0"
+    }
+  ],
+  "slide_ready_findings": [
+    "Across 50 selected benchmark cases, the mean overall curatability score was 0.591.",
+    "Logical schema completeness was high on average (0.935), but physical grounding was substantially lower (0.516), indicating that documentation-derived schema completeness does not imply physical curatability.",
+    "The system resolved 119 of 324 file-grounding-applicable logical claims (36.7%).",
+    "Human review was requested for 206 logical file claims, reflecting curator workload that remains after automated grounding and preview.",
+    "All generated notebooks that were executed completed successfully (50 / 50), while artifact preview exposed heterogeneous artifact-level inspection needs.",
+    "The generic preview helper successfully loaded 210 of 394 preview targets (53.3%). The remaining 184 targets required non-generic handling such as archive unpacking, specialized loaders, text/code inspection, or encoding repair.",
+    "Recommendation distribution: 14 light-review ingest, 9 curator-review ingest, 23 request supplementary materials/manual mapping, and 4 high-risk manual review."
+  ]
+}

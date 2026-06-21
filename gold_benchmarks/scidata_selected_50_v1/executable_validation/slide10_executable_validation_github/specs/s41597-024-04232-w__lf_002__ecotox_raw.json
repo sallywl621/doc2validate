@@ -1,0 +1,10 @@
+{
+  "article_id": "s41597-024-04232-w",
+  "logical_file_id": "lf_002",
+  "logical_name": "ecotox_raw",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-024-04232-w/artifact/github/github_github.com__j-adamczyk_ApisTox_dataset/ApisTox_dataset-master/raw_data/ecotox.csv",
+  "target_columns": [
+    "Exposure Type"
+  ]
+}

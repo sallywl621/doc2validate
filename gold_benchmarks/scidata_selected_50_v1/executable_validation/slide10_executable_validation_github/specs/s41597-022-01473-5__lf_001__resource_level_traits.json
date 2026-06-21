@@ -1,0 +1,12 @@
+{
+  "article_id": "s41597-022-01473-5",
+  "logical_file_id": "lf_001",
+  "logical_name": "resource_level_traits",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-022-01473-5/artifact/github/github_github.com__RiesLabGU_LepTraits/LepTraits-main/records/records.csv",
+  "target_columns": [
+    "ResourceID",
+    "Species",
+    "WingSpanLower_Male"
+  ]
+}

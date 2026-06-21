@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-022-01788-3",
+  "logical_file_id": "lf_002",
+  "logical_name": "enriched_site_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-022-01788-3/artifact/github/github_github.com__BioRDM_COVID-Wastewater-Scotland/COVID-Wastewater-Scotland-main/data/SARS-Cov2_RNA_monitoring_ww_scotland_full.csv",
+  "target_columns": [
+    "Latitude_dd",
+    "Longitude_dd",
+    "Million_gene_copies_per_person_per_day",
+    "Population",
+    "Population_band"
+  ]
+}

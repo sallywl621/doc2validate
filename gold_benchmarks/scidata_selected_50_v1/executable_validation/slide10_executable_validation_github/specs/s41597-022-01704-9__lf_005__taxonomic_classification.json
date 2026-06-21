@@ -1,0 +1,11 @@
+{
+  "article_id": "s41597-022-01704-9",
+  "logical_file_id": "lf_005",
+  "logical_name": "taxonomic_classification",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-022-01704-9/artifact/github/github_github.com__p-pottier_Amphibian_upper_thermal_limits/Amphibian_upper_thermal_limits-main/data/amph_shl_new_Classification.csv",
+  "target_columns": [
+    "Family",
+    "Genes"
+  ]
+}

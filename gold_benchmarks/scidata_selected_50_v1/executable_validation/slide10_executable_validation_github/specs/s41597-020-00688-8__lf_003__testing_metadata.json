@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-020-00688-8",
+  "logical_file_id": "lf_003",
+  "logical_name": "testing_metadata",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-020-00688-8/artifact/figshare/covid-testing-source-details.csv",
+  "target_columns": [
+    "Country",
+    "Detailed description",
+    "Number of observations",
+    "Series",
+    "Units"
+  ]
+}

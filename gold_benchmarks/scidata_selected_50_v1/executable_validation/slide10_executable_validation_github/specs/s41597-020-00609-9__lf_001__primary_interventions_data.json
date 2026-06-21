@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-020-00609-9",
+  "logical_file_id": "lf_001",
+  "logical_name": "primary_interventions_data",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-020-00609-9/artifact/github/github_github.com__amel-github_covid19-interventionmeasures/covid19-interventionmeasures-master/COVID19_non-pharmaceutical-interventions_version2_utf8.csv",
+  "target_columns": [
+    "Country",
+    "Date",
+    "Measure_L1",
+    "id",
+    "iso3"
+  ]
+}

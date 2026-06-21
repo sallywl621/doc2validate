@@ -1,0 +1,11 @@
+{
+  "article_id": "s41597-020-00676-y",
+  "logical_file_id": "lf_006",
+  "logical_name": "Gear type predator",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-020-00676-y/artifact/github/github_github.com__mcarolinegraham_North_Pacific_Marine_Salmon_Diet_Database/North_Pacific_Marine_Salmon_Diet_Database-master/data/gear_type_predator.csv",
+  "target_columns": [
+    "gear_type",
+    "gear_type_predator_id"
+  ]
+}

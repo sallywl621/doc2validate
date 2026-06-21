@@ -1,0 +1,3 @@
+standalone-v2-hardfilter-0618-new-package-name
+file_annotation_targets = grounding_status != resolved
+default_output_dir = grounding_v2_hardfilter_0618

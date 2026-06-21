@@ -1,0 +1,14 @@
+{
+  "article_id": "s41597-020-00688-8",
+  "logical_file_id": "lf_001",
+  "logical_name": "testing_time_series",
+  "observed_suffix": ".csv",
+  "artifact_relative_path": "s41597-020-00688-8/artifact/figshare/covid-testing-all-observations.csv",
+  "target_columns": [
+    "Country",
+    "Cumulative total",
+    "Daily change in cumulative total",
+    "Date",
+    "ISO code"
+  ]
+}
